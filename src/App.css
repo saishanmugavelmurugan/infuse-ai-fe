@@ -1,0 +1,20 @@
+/* PrimeCore Health AI Platform Styles */
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* Hide external badges in production */
+#emergent-badge,
+[id*="emergent"],
+a[href*="emergent.sh"],
+div[style*="Made with"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.App {
+  min-height: 100vh;
+}
