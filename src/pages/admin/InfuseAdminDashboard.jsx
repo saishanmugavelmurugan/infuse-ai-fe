@@ -38,7 +38,7 @@ const InfuseAdminDashboard = () => {
 
   // Validate Infuse email
   const isInfuseEmail = (email) => {
-    return email.endsWith('@infuse.ai') || email.endsWith('@infuse.demo');
+    return email.endsWith('@infuse.ai') || email.endsWith('@infuse.demo') || email.endsWith('@infuse.net.in');
   };
 
   // Handle login
@@ -47,13 +47,21 @@ const InfuseAdminDashboard = () => {
     setError('');
     
     if (!isInfuseEmail(email)) {
-      setError('Access restricted to Infuse team members only (@infuse.ai or @infuse.demo)');
+      setError('Access restricted to Infuse team members only (@infuse.ai, @infuse.demo, or @infuse.net.in)');
       return;
     }
 
     // For demo purposes, allow direct login with Infuse emails
     if (email === 'admin@infuse.demo' && password === 'admin1234') {
       localStorage.setItem('infuse_admin_token', 'infuse_demo_token');
+      localStorage.setItem('infuse_admin_email', email);
+      setIsAuthenticated(true);
+      return;
+    }
+    
+    // Allow ranjeetkoul@infuse.net.in admin access
+    if (email.toLowerCase() === 'ranjeetkoul@infuse.net.in' && password === 'Ranjeet$03') {
+      localStorage.setItem('infuse_admin_token', 'infuse_admin_token_ranjeet');
       localStorage.setItem('infuse_admin_email', email);
       setIsAuthenticated(true);
       return;
@@ -179,11 +187,11 @@ const InfuseAdminDashboard = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.name@infuse.ai"
+                placeholder="your.name@infuse.net.in"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 required
               />
-              <p className="text-xs text-gray-500 mt-1">Must be @infuse.ai or @infuse.demo email</p>
+              <p className="text-xs text-gray-500 mt-1">Must be @infuse.ai, @infuse.demo, or @infuse.net.in email</p>
             </div>
 
             <div>

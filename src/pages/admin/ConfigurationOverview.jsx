@@ -680,9 +680,9 @@ const ConfigurationOverview = () => {
           <div className="mt-4 p-4 bg-white/5 rounded-lg">
             <p className="text-sm text-gray-300">
               <strong>Master URL:</strong>{' '}
-              <a href="https://caretrack-68.preview.emergentagent.com" target="_blank" rel="noopener noreferrer" 
+              <a href="https://qa-track-suite.preview.emergentagent.com" target="_blank" rel="noopener noreferrer" 
                  className="text-blue-400 hover:underline inline-flex items-center gap-1">
-                https://caretrack-68.preview.emergentagent.com
+                https://qa-track-suite.preview.emergentagent.com
                 <ExternalLink className="w-3 h-3" />
               </a>
             </p>

@@ -68,22 +68,22 @@ const SecureSphereLogin = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Security Features */}
-      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 items-center justify-center p-12 relative overflow-hidden">
+      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-slate-900 via-[#8B4513] to-[#E55A00] items-center justify-center p-12 relative overflow-hidden">
         {/* Background Animation */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full filter blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500 rounded-full filter blur-3xl animate-pulse delay-1000" />
+          <div className="absolute top-0 left-0 w-96 h-96 bg-[#FFDA7B] rounded-full filter blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#FF9A3B] rounded-full filter blur-3xl animate-pulse delay-1000" />
         </div>
 
         <div className="max-w-lg text-white relative z-10">
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-blue-600/30 rounded-xl">
-                <Shield className="w-12 h-12 text-blue-400" />
+              <div className="p-3 bg-gradient-to-br from-[#FFDA7B]/30 to-[#FF9A3B]/30 rounded-xl">
+                <Shield className="w-12 h-12 text-[#FFDA7B]" />
               </div>
               <div>
                 <h1 className="text-4xl font-bold">SecureSphere</h1>
-                <p className="text-blue-300">Enterprise Security Platform</p>
+                <p className="text-[#FFDA7B]">Enterprise Security Platform</p>
               </div>
             </div>
             <p className="text-xl text-slate-300">
@@ -105,8 +105,8 @@ const SecureSphereLogin = () => {
             </div>
 
             <div className="flex items-start space-x-4 bg-white/5 rounded-xl p-4 backdrop-blur">
-              <div className="bg-cyan-500/20 rounded-lg p-3">
-                <Wifi className="w-6 h-6 text-cyan-400" />
+              <div className="bg-[#FF9A3B]/20 rounded-lg p-3">
+                <Wifi className="w-6 h-6 text-[#FF9A3B]" />
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-1">IoT/GSM Security</h3>
@@ -117,8 +117,8 @@ const SecureSphereLogin = () => {
             </div>
 
             <div className="flex items-start space-x-4 bg-white/5 rounded-xl p-4 backdrop-blur">
-              <div className="bg-green-500/20 rounded-lg p-3">
-                <Activity className="w-6 h-6 text-green-400" />
+              <div className="bg-[#FFDA7B]/20 rounded-lg p-3">
+                <Activity className="w-6 h-6 text-[#FFDA7B]" />
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-1">Network Analytics</h3>
@@ -143,7 +143,7 @@ const SecureSphereLogin = () => {
         <div className="absolute top-4 left-4">
           <Link 
             to="/login" 
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition font-medium"
+            className="flex items-center gap-2 text-slate-400 hover:text-[#FF9A3B] transition font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Login</span>
@@ -159,7 +159,7 @@ const SecureSphereLogin = () => {
               className="h-16 mx-auto mb-4 rounded-xl"
             />
             <h2 className="text-2xl font-bold text-white">SecureSphere Admin</h2>
-            <p className="text-blue-400 text-sm mt-1 font-medium">Empowering Health Through Intelligence</p>
+            <p className="text-[#FF9A3B] text-sm mt-1 font-medium">Empowering Health Through Intelligence</p>
             <p className="text-slate-500 text-xs mt-1">Restricted Access - Admin Only</p>
           </div>
 
@@ -180,8 +180,8 @@ const SecureSphereLogin = () => {
           {/* Login Form */}
           <form onSubmit={handleLogin} className="bg-slate-900/50 backdrop-blur border border-slate-800 rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-blue-600/20 rounded-xl">
-                <Lock className="w-6 h-6 text-blue-500" />
+              <div className="p-3 bg-gradient-to-br from-[#FFDA7B]/20 to-[#FF9A3B]/20 rounded-xl">
+                <Lock className="w-6 h-6 text-[#FF9A3B]" />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-white">Admin Login</h3>
@@ -197,7 +197,7 @@ const SecureSphereLogin = () => {
                   value={loginForm.email}
                   onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                   placeholder="admin@infuse.net.in"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9A3B] focus:border-transparent"
                   required
                   data-testid="securesphere-email"
                 />
@@ -211,7 +211,7 @@ const SecureSphereLogin = () => {
                     value={loginForm.password}
                     onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
+                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9A3B] focus:border-transparent pr-12"
                     required
                     data-testid="securesphere-password"
                   />
@@ -235,7 +235,7 @@ const SecureSphereLogin = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3 bg-gradient-to-r from-[#FFDA7B] via-[#FF9A3B] to-[#E55A00] hover:from-[#FFE49A] hover:via-[#FFAD5C] hover:to-[#FF7A2E] text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg hover:shadow-[#E55A00]/30"
                 data-testid="securesphere-login-btn"
               >
                 {loading ? (
@@ -252,7 +252,7 @@ const SecureSphereLogin = () => {
             {/* Footer */}
             <div className="mt-6 pt-6 border-t border-slate-800 text-center">
               <p className="text-xs text-slate-500">
-                Powered by <span className="text-blue-400">Infuse AI</span>
+                Powered by <span className="text-[#FF9A3B]">Infuse AI</span>
               </p>
               <p className="text-xs text-slate-600 mt-1">
                 info@infuse.net.in | www.infuse.net.in
@@ -264,7 +264,7 @@ const SecureSphereLogin = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-500">
               Need healthcare access?{' '}
-              <Link to="/login/health" className="text-green-500 hover:text-green-400">
+              <Link to="/login/health" className="text-[#FF9A3B] hover:text-[#FFDA7B]">
                 Login to HealthTrack Pro
               </Link>
             </p>

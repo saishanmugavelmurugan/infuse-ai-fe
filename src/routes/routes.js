@@ -27,6 +27,8 @@ import HealthRegister from '../pages/HealthRegister';
 import SecurityRegister from '../pages/SecurityRegister';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
+import MFASettings from '../pages/MFASettings';
+import AccountSecurityDashboard from '../pages/AccountSecurityDashboard';
 
 // Doctor Onboarding
 import DoctorOnboarding from '../pages/DoctorOnboarding';
@@ -46,6 +48,15 @@ import PitchDeck from '../pages/PitchDeck';
 import Downloads from '../pages/Downloads';
 import HealthSchemesPage from '../pages/HealthSchemesPage';
 import DeveloperPortal from '../pages/DeveloperPortal';
+import CompliancePage from '../pages/CompliancePage';
+import MarketingCampaignsPage from '../pages/MarketingCampaignsPage';
+import DownloadsHubPage from '../pages/DownloadsHubPage';
+import DHACompliancePage from '../pages/DHACompliancePage';
+import PrakritiAssessment from '../pages/PrakritiAssessment';
+import HealthAnalysisPage from '../pages/HealthAnalysisPage';
+import LabReportsPage from '../pages/LabReportsPage';
+import PatientAIAnalysis from '../pages/PatientAIAnalysis';
+import DoctorAIInsights from '../pages/DoctorAIInsights';
 
 // Dashboard Pages
 import MainDashboard from '../pages/dashboard/MainDashboard';
@@ -63,6 +74,12 @@ import EnterpriseAdminDashboard from '../pages/admin/EnterpriseAdminDashboard';
 import ConfigurationOverview from '../pages/admin/ConfigurationOverview';
 import ArchitectureOverview from '../pages/admin/ArchitectureOverview';
 import FeatureFlagsAdmin from '../pages/admin/FeatureFlagsAdmin';
+
+// AI Agents Pages
+import AIAgentsDashboard from '../pages/AIAgentsDashboard';
+import SupportAgentPage from '../pages/SupportAgentPage';
+import MasterAgentPage from '../pages/MasterAgentPage';
+import RoadmapAgentPage from '../pages/RoadmapAgentPage';
 
 // Health Components
 import AILifestylePlanner from '../components/health/AILifestylePlanner';
@@ -105,9 +122,19 @@ export const publicRoutes = [
   { path: '/careers', element: <Careers /> },
   { path: '/terms', element: <TermsOfService /> },
   { path: '/privacy', element: <PrivacyPolicy /> },
+  { path: '/privacy-policy', element: <PrivacyPolicy /> },
   { path: '/downloads', element: <Downloads /> },
   { path: '/downloads/:platform', element: <AppDownload /> },
   { path: '/health-schemes', element: <HealthSchemesPage /> },
+  { path: '/compliance', element: <CompliancePage /> },
+  { path: '/dha-compliance', element: <DHACompliancePage /> },
+  { path: '/marketing', element: <MarketingCampaignsPage /> },
+  { path: '/downloads-hub', element: <DownloadsHubPage /> },
+  { path: '/prakriti-assessment', element: <PrakritiAssessment /> },
+  { path: '/health-analysis', element: <HealthAnalysisPage /> },
+  { path: '/lab-reports', element: <LabReportsPage /> },
+  { path: '/patient-analysis', element: <PatientAIAnalysis /> },
+  { path: '/doctor-insights', element: <DoctorAIInsights /> },
   
   // Developer Portal
   { path: '/developers', element: <DeveloperPortal /> },
@@ -135,6 +162,12 @@ export const publicRoutes = [
   // Appointment Booking (public for demo access)
   { path: '/book-appointment', element: <BookAppointment /> },
   { path: '/appointments/book', element: <BookAppointment /> },
+  
+  // AI Agents Dashboard (public for demo)
+  { path: '/ai-agents', element: <AIAgentsDashboard /> },
+  { path: '/ai-agents/support', element: <SupportAgentPage /> },
+  { path: '/ai-agents/master', element: <MasterAgentPage /> },
+  { path: '/ai-agents/roadmap', element: <RoadmapAgentPage /> },
 ];
 
 /**
@@ -143,6 +176,9 @@ export const publicRoutes = [
 export const protectedRoutes = [
   { path: '/dashboard', element: <MainDashboard /> },
   { path: '/dashboard/health', element: <HealthTrackPro /> },
+  { path: '/settings/mfa', element: <MFASettings /> },
+  { path: '/account/security', element: <AccountSecurityDashboard /> },
+  { path: '/security-dashboard', element: <AccountSecurityDashboard /> },
 ];
 
 /**

@@ -178,7 +178,7 @@ const DoctorDashboard = () => {
   ).slice(0, 5);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-gradient-to-br from-orange-50/50 via-white to-amber-50/50 min-h-full">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -186,11 +186,11 @@ const DoctorDashboard = () => {
           <p className="text-gray-600 mt-1">{t('manage_patients_appointments', 'Manage your patients and appointments')}</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button variant="outline" onClick={() => setShowAddPatient(true)}>
+          <Button variant="outline" onClick={() => setShowAddPatient(true)} className="border-orange-200 hover:bg-orange-50">
             <Plus className="w-4 h-4 mr-2" />
             {t('add_patient', 'Add Patient')}
           </Button>
-          <Button className="bg-orange-600 hover:bg-orange-700">
+          <Button className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-md">
             <Calendar className="w-4 h-4 mr-2" />
             {t('new_appointment', 'New Appointment')}
           </Button>
@@ -199,50 +199,50 @@ const DoctorDashboard = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border-l-4 border-l-blue-500">
+        <Card className="border-l-4 border-l-orange-500 hover:shadow-md transition">
           <CardContent className="pt-6">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm text-gray-600">{t('total_patients', 'Total Patients')}</p>
                 <p className="text-2xl md:text-3xl font-bold text-gray-900 mt-1">{stats.totalPatients}</p>
               </div>
-              <Users className="w-8 h-8 text-blue-500" />
+              <Users className="w-8 h-8 text-orange-500" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-green-500">
+        <Card className="border-l-4 border-l-amber-500 hover:shadow-md transition">
           <CardContent className="pt-6">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm text-gray-600">{t('todays_appointments', "Today's Appointments")}</p>
                 <p className="text-2xl md:text-3xl font-bold text-gray-900 mt-1">{stats.todayAppointments}</p>
               </div>
-              <Calendar className="w-8 h-8 text-green-500" />
+              <Calendar className="w-8 h-8 text-amber-500" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-orange-500">
+        <Card className="border-l-4 border-l-yellow-500 hover:shadow-md transition">
           <CardContent className="pt-6">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm text-gray-600">{t('upcoming', 'Upcoming')}</p>
                 <p className="text-2xl md:text-3xl font-bold text-gray-900 mt-1">{stats.upcomingAppointments}</p>
               </div>
-              <Clock className="w-8 h-8 text-orange-500" />
+              <Clock className="w-8 h-8 text-yellow-500" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-purple-500">
+        <Card className="border-l-4 border-l-red-400 hover:shadow-md transition">
           <CardContent className="pt-6">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm text-gray-600">{t('completed_today', 'Completed Today')}</p>
                 <p className="text-2xl md:text-3xl font-bold text-gray-900 mt-1">{stats.completedToday}</p>
               </div>
-              <CheckCircle className="w-8 h-8 text-purple-500" />
+              <CheckCircle className="w-8 h-8 text-red-400" />
             </div>
           </CardContent>
         </Card>
@@ -322,7 +322,7 @@ const DoctorDashboard = () => {
                             </div>
                             <div className="text-sm text-gray-600 mt-1">{appt.reason}</div>
                           </div>
-                          <Button size="sm" className="bg-orange-600 hover:bg-orange-700">{t('view', 'View')}</Button>
+                          <Button size="sm" className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600">{t('view', 'View')}</Button>
                         </div>
                       </div>
                     ))}

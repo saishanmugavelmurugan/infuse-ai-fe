@@ -322,7 +322,7 @@ const ArchitectureOverview = () => {
             </div>
           </div>
           <div className="mt-4 pt-4 border-t border-black">
-            <strong>URL:</strong> https://caretrack-68.preview.emergentagent.com
+            <strong>URL:</strong> https://qa-track-suite.preview.emergentagent.com
           </div>
         </div>
 

@@ -5,7 +5,8 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { LanguageSwitcher } from '../LanguageSelector';
 import { 
   Home, Heart, Shield, LayoutDashboard, LogOut, Menu, X, 
-  Settings, User, Bell, ChevronDown, FileText, Globe, Sliders
+  Settings, User, Bell, ChevronDown, FileText, Globe, Sliders,
+  Brain, Stethoscope, Upload, Leaf
 } from 'lucide-react';
 
 // Admin email that has access to admin features
@@ -28,11 +29,24 @@ const DashboardLayout = ({ children, title }) => {
       { name: t('dashboard'), href: '/dashboard', icon: LayoutDashboard },
     ];
 
-    // All authenticated users see HealthTrack Pro
-    return [
-      ...baseNav,
+    // Check user role for AI Analysis navigation
+    const isDoctor = user?.role === 'doctor' || user?.role === 'admin' || user?.role === 'superadmin';
+    const isPatient = user?.role === 'patient' || user?.role === 'user';
+
+    const healthNav = [
       { name: 'HealthTrack Pro', href: '/dashboard/health', icon: Heart },
+      { name: 'Upload Lab Reports', href: '/lab-reports', icon: Upload },
+      { name: 'Ayurvedic Assessment', href: '/prakriti-assessment', icon: Leaf },
     ];
+
+    // Add role-specific AI Analysis navigation
+    if (isDoctor) {
+      healthNav.push({ name: 'AI Clinical Insights', href: '/doctor-insights', icon: Stethoscope });
+    } else if (isPatient) {
+      healthNav.push({ name: 'AI Health Analysis', href: '/patient-analysis', icon: Brain });
+    }
+
+    return [...baseNav, ...healthNav];
   };
 
   const navigation = getNavigation();

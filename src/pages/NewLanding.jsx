@@ -8,7 +8,7 @@ import {
   Lock, CheckCircle, ArrowRight, Menu, X, Target, 
   Lightbulb, Award, Zap, Cloud, Database, ChevronRight,
   Mail, Linkedin, Brain, Cpu, Radio, Building2, Smartphone,
-  BarChart3, Server, Network, Car, Wifi
+  BarChart3, Server, Network, Car, Wifi, Settings
 } from 'lucide-react';
 
 const NewLanding = () => {
@@ -443,37 +443,122 @@ const NewLanding = () => {
               Meet Our Leadership Team
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Experienced leaders from healthcare, technology, and cybersecurity driving our vision forward.
+              Guided by experience, driven by innovation. Meet the visionaries leading Infuse-Ai™ towards a healthier future.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { name: 'Dr. Rajesh Kumar', role: 'CEO & Co-Founder', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face', bg: 'from-orange-500 to-amber-500' },
-              { name: 'Priya Sharma', role: 'CTO & Co-Founder', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face', bg: 'from-indigo-500 to-purple-500' },
-              { name: 'Michael Chen', role: 'Chief Security Officer', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face', bg: 'from-emerald-500 to-teal-500' }
-            ].map((leader, idx) => (
-              <div key={idx} className="group text-center">
-                <div className="relative w-48 h-48 mx-auto mb-6">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${leader.bg} rounded-2xl rotate-6 group-hover:rotate-12 transition-transform`}></div>
-                  <img 
-                    src={leader.image}
-                    alt={leader.name}
-                    className="relative w-full h-full object-cover rounded-2xl shadow-lg"
-                  />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900">{leader.name}</h3>
-                <p className="text-gray-600">{leader.role}</p>
-                <div className="flex justify-center gap-3 mt-4">
-                  <a href="#" className="p-2 bg-gray-100 rounded-lg hover:bg-orange-100 transition">
-                    <Linkedin className="w-5 h-5 text-gray-600 hover:text-orange-500" />
-                  </a>
-                  <a href="#" className="p-2 bg-gray-100 rounded-lg hover:bg-orange-100 transition">
-                    <Mail className="w-5 h-5 text-gray-600 hover:text-orange-500" />
-                  </a>
+          {/* Executive Team */}
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {/* Rohini Koul - Founder & CEO */}
+            <div className="group text-center bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all border border-gray-100">
+              <div className="relative w-40 h-40 mx-auto mb-4">
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_5320a067-ee93-485a-9948-ab1c08872fea/artifacts/ur2z11kt_image.png"
+                  alt="Rohini Koul"
+                  className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
+                  style={{objectPosition: '50% 20%'}}
+                />
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                  <span className="px-4 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold rounded-full shadow-md">
+                    Founder & CEO
+                  </span>
                 </div>
               </div>
-            ))}
+              <h3 className="text-xl font-bold text-gray-900 mt-4">Rohini Koul</h3>
+              <p className="text-orange-500 font-medium text-sm mb-3">Chief Executive Officer</p>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                With 20 years of distinguished experience in Academia, Rohini provides the visionary leadership that drives Infuse-Ai™'s mission to make technology accessible across diverse communities.
+              </p>
+            </div>
+
+            {/* Chief Growth Officer */}
+            <div className="group text-center bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all border border-gray-100">
+              <div className="relative w-40 h-40 mx-auto mb-4">
+                <div className="w-full h-full bg-gradient-to-br from-orange-100 to-amber-100 rounded-full flex items-center justify-center">
+                  <TrendingUp className="w-16 h-16 text-orange-500" />
+                </div>
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                  <span className="px-4 py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-bold rounded-full shadow-md">
+                    Founder
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mt-4">Chief Growth Officer</h3>
+              <p className="text-orange-500 font-medium text-sm mb-3">Culture & Business</p>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                A seasoned executive with 30 years of distinguished experience in technology, driving organizational culture and business transformation across global enterprises.
+              </p>
+            </div>
+
+            {/* Chief Technology Officer */}
+            <div className="group text-center bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all border border-gray-100">
+              <div className="relative w-40 h-40 mx-auto mb-4">
+                <div className="w-full h-full bg-gradient-to-br from-orange-100 to-amber-100 rounded-full flex items-center justify-center">
+                  <Settings className="w-16 h-16 text-orange-500" />
+                </div>
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                  <span className="px-4 py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-bold rounded-full shadow-md">
+                    CTO
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mt-4">Chief Technology Officer</h3>
+              <p className="text-orange-500 font-medium text-sm mb-3">Technology & Innovation</p>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                With 24 years of hands-on experience developing and leading enterprise SaaS and PaaS products, our CTO has been at the forefront of solving real-world problems.
+              </p>
+            </div>
+          </div>
+
+          {/* Board Members */}
+          <div className="text-center mb-10">
+            <h3 className="text-2xl font-bold text-gray-900">Board of Directors</h3>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Dr. Vishvas Koul */}
+            <div className="group text-center bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all border border-gray-100">
+              <div className="relative w-40 h-40 mx-auto mb-4">
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_5320a067-ee93-485a-9948-ab1c08872fea/artifacts/h5cn34tn_image.png"
+                  alt="Dr. Vishvas Koul"
+                  className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
+                  style={{objectPosition: '20% 15%'}}
+                />
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                  <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-teal-500 text-white text-xs font-bold rounded-full shadow-md whitespace-nowrap">
+                    Director & Board Member
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mt-4">Dr. Vishvas Koul</h3>
+              <p className="text-orange-500 font-medium text-sm mb-3">MBBS, MD (Anaesthesiology), Fellowship in Pain & Palliative Care</p>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Dr. Vishvas Koul is a highly experienced Anaesthesiologist and Critical Care specialist with over 10 years of dedicated clinical and academic experience. Currently serving as the Head of Anaesthesia & Critical Care at Oncolife Hospital.
+              </p>
+            </div>
+
+            {/* Dr. Jyoti Mehta */}
+            <div className="group text-center bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all border border-gray-100">
+              <div className="relative w-40 h-40 mx-auto mb-4">
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_5320a067-ee93-485a-9948-ab1c08872fea/artifacts/h5cn34tn_image.png"
+                  alt="Dr. Jyoti Mehta"
+                  className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
+                  style={{objectPosition: '80% 15%'}}
+                />
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                  <span className="px-3 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold rounded-full shadow-md whitespace-nowrap">
+                    Director & Board Member
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mt-4">Dr. Jyoti Mehta</h3>
+              <p className="text-orange-500 font-medium text-sm mb-3">MBBS, MD (Radiation Oncology), DrNB (Medical Oncology), MBA, FCPM, FICO</p>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Senior Clinical Oncologist with dual specialization in Medical Oncology and Radiation Oncology. Ex-AIIMS clinician with experience of managing over 5000 cancer cases. Currently Lead Clinical Oncologist at TGH OncoLife Cancer Centre.
+              </p>
+            </div>
           </div>
         </div>
       </section>

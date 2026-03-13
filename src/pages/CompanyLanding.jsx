@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSwitcher } from '../components/LanguageSelector';
@@ -11,13 +11,138 @@ import {
   Star, Stethoscope, Leaf, FileText, Watch, Shield,
   Smartphone, BarChart3, Settings, UserCheck, Key,
   Apple, Dumbbell, Moon, Utensils, Clock, BadgeCheck,
-  Eye, EyeOff, AlertCircle, Loader2
+  Eye, EyeOff, AlertCircle, Loader2, Bot, Send, MessageCircle,
+  Minimize2, Maximize2
 } from 'lucide-react';
+
+const API_BASE = process.env.REACT_APP_BACKEND_URL;
 
 // Admin credentials
 const ADMIN_CREDENTIALS = {
   email: 'ranjeetkoul@infuse.net.in',
   password: 'Ranjeet$03'
+};
+
+// Leadership Team Data - Matching infuse.net.in
+const leadershipTeam = [
+  {
+    name: 'Rohini Koul',
+    title: 'Chief Executive Officer',
+    role: 'Founder & CEO',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-100',
+    icon: Users,
+    image: 'https://customer-assets.emergentagent.com/job_5320a067-ee93-485a-9948-ab1c08872fea/artifacts/hz2ljvy1_WhatsApp%20Image%202026-02-17%20at%206.40.20%20PM.jpeg',
+    imagePosition: 'center 20%',
+    bio: `With 20 years of distinguished experience in Academia, Rohini provides the visionary leadership that drives Infuse-ai's mission to make technology accessible across diverse populations. Her commitment to bridging the digital divide ensures that cutting-edge AI solutions reach underserved communities while maintaining the highest standards of security in the era of deepfakes and misinformation.`,
+    extraBio: `Under her leadership, Infuse-ai is pioneering efforts to make healthcare a priority accessible globally, democratizing access to enterprise-grade health solutions.`
+  },
+  {
+    name: 'Chief Growth Officer',
+    title: 'Culture & Business',
+    role: 'Founder',
+    color: 'from-teal-500 to-teal-600',
+    bgColor: 'bg-teal-100',
+    icon: TrendingUp,
+    image: null,
+    bio: `A seasoned executive with 30 years of distinguished experience in technology, driving organizational culture and business transformation across global enterprises. His strategic vision has been instrumental in scaling multiple technology ventures from inception to market leadership, establishing best practices in enterprise software delivery and customer success.`,
+    extraBio: `As the driving force behind Infuse-ai's growth strategy, he leads initiatives to build sustainable partnerships and high-performance teams.`
+  },
+  {
+    name: 'Chief Technology Officer',
+    title: 'Technology & Innovation',
+    role: 'CTO',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-100',
+    icon: Settings,
+    image: null,
+    bio: `With 24 years of hands-on experience developing and leading enterprise SaaS and PaaS products, our CTO has been at the forefront of solving real-world problems through technology innovation. His technical leadership has resulted in platforms that process petabytes of data daily while maintaining 99.99% uptime.`,
+    extraBio: `His expertise spans AI/ML, cloud architecture, and enterprise security, with a proven track record of building solutions that scale globally while adhering to the highest security standards.`
+  },
+  {
+    name: 'Dr. Vishvas Koul',
+    title: 'MBBS, MD (Anaesthesiology), Fellowship in Pain & Palliative Care',
+    role: 'Director & Board Member',
+    color: 'from-green-500 to-teal-500',
+    bgColor: 'bg-green-100',
+    icon: Stethoscope,
+    image: 'https://customer-assets.emergentagent.com/job_5320a067-ee93-485a-9948-ab1c08872fea/artifacts/1hkgwkfu_WhatsApp%20Image%202026-02-13%20at%2010.16.51%20AM.jpeg',
+    imagePosition: 'center top',
+    bio: `Dr. Vishvas Koul is a highly experienced Anaesthesiologist and Critical Care specialist with over 10 years of dedicated clinical and academic experience. Currently serving as the Head of Anaesthesia & Critical Care at Oncolife Hospital, he leads a multidisciplinary team delivering advanced perioperative care, critical care management, and pain services.`,
+    extraBio: `His areas of expertise include Onco-anaesthesia, Critical Care Medicine, Acute & Chronic Pain Management, Palliative Care, and Perioperative High-Risk Case Management.`
+  },
+  {
+    name: 'Dr. Jyoti Mehta',
+    title: 'MBBS, MD (Radiation Oncology), DrNB (Medical Oncology), MBA, FCPM, FICO',
+    role: 'Director & Board Member',
+    color: 'from-cyan-500 to-blue-500',
+    bgColor: 'bg-cyan-100',
+    icon: Stethoscope,
+    image: 'https://customer-assets.emergentagent.com/job_5320a067-ee93-485a-9948-ab1c08872fea/artifacts/duxd6qhw_image.png',
+    imagePosition: 'center 15%',
+    bio: `Senior Clinical Oncologist with dual specialization in Medical Oncology and Radiation Oncology, delivering comprehensive multimodality cancer care. Ex-AIIMS clinician with observership at Tata Memorial Centre and experience of managing over 5000 cancer cases. Currently Lead Clinical Oncologist at TGH OncoLife Cancer Centre.`,
+    extraBio: `She delivers advanced radiation oncology including IMRT, IGRT, and VMAT alongside chemotherapy, immunotherapy, and targeted therapy.`
+  }
+];
+
+// Leader Card Component matching infuse.net.in style
+const LeaderCard = ({ leader, index }) => {
+  const [expanded, setExpanded] = useState(false);
+  
+  return (
+    <div 
+      className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
+    >
+      {/* Circular Avatar */}
+      <div className="flex flex-col items-center mb-4">
+        <div className="w-28 h-28 rounded-full overflow-hidden bg-gray-100 mb-3 border-4 border-white shadow-lg">
+          {leader.image ? (
+            <img 
+              src={leader.image} 
+              alt={leader.name}
+              className="w-full h-full object-cover"
+              style={{objectPosition: leader.imagePosition || 'center'}}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+          ) : null}
+          <div 
+            className={`w-full h-full ${leader.bgColor} flex items-center justify-center`} 
+            style={{display: leader.image ? 'none' : 'flex'}}
+          >
+            <leader.icon className="w-12 h-12 text-gray-400" />
+          </div>
+        </div>
+        
+        {/* Role Badge */}
+        <span className={`px-4 py-1.5 bg-gradient-to-r ${leader.color} text-white text-xs font-semibold rounded-full shadow-md`}>
+          {leader.role}
+        </span>
+      </div>
+
+      {/* Name & Title */}
+      <div className="text-center mb-4">
+        <h3 className="text-xl font-bold text-gray-900 mb-1">{leader.name}</h3>
+        <p className="text-gray-600 text-sm">{leader.title}</p>
+      </div>
+
+      {/* Bio */}
+      <div className="text-gray-600 text-sm leading-relaxed text-center">
+        <p className={expanded ? '' : 'line-clamp-3'}>{leader.bio}</p>
+        {expanded && leader.extraBio && (
+          <p className="mt-2 text-gray-500">{leader.extraBio}</p>
+        )}
+        <button 
+          onClick={() => setExpanded(!expanded)}
+          className="mt-3 text-[#E55A00] font-medium hover:text-[#C64700] transition-colors inline-flex items-center gap-1"
+        >
+          {expanded ? 'Show less' : 'Read more'}
+        </button>
+      </div>
+    </div>
+  );
 };
 
 const CompanyLanding = () => {
@@ -31,6 +156,200 @@ const CompanyLanding = () => {
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const { t, isRTL } = useLanguage();
+  
+  // Chatbot state
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatSessionId, setChatSessionId] = useState(null);
+  const [chatMinimized, setChatMinimized] = useState(false);
+  const [lastActivityTime, setLastActivityTime] = useState(null);
+  const chatEndRef = useRef(null);
+  const chatInputRef = useRef(null);
+  const inactivityTimerRef = useRef(null);
+  const SESSION_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
+
+  // End session and cleanup
+  const endChatSession = async (reason = 'user_closed') => {
+    if (chatSessionId) {
+      try {
+        await fetch(`${API_BASE}/api/agents/support/session/end`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            session_id: chatSessionId,
+            reason: reason
+          })
+        });
+      } catch (error) {
+        console.error('Error ending session:', error);
+      }
+    }
+    // Reset all chat state
+    setChatSessionId(null);
+    setChatMessages([]);
+    setChatInput('');
+    setChatLoading(false);
+    setLastActivityTime(null);
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+  };
+
+  // Start fresh session
+  const startNewSession = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/agents/support/session/new`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      setChatSessionId(data.session_id);
+      setLastActivityTime(Date.now());
+      return data.session_id;
+    } catch (error) {
+      console.error('Error creating session:', error);
+      return null;
+    }
+  };
+
+  // Reset inactivity timer
+  const resetInactivityTimer = () => {
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    setLastActivityTime(Date.now());
+    
+    inactivityTimerRef.current = setTimeout(async () => {
+      if (chatOpen && chatSessionId) {
+        // Auto-close session due to inactivity
+        setChatMessages(prev => [...prev, {
+          role: 'system',
+          content: 'Chat ended due to inactivity. Click to start a new conversation.',
+          timestamp: new Date().toISOString(),
+          isTimeout: true
+        }]);
+        await endChatSession('timeout');
+      }
+    }, SESSION_TIMEOUT_MS);
+  };
+
+  // Handle window/tab close - cleanup session
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (chatSessionId) {
+        // Use sendBeacon for reliable cleanup on page unload
+        navigator.sendBeacon(
+          `${API_BASE}/api/agents/support/session/end`,
+          JSON.stringify({ session_id: chatSessionId, reason: 'navigation' })
+        );
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      // Cleanup on component unmount
+      if (chatSessionId) {
+        endChatSession('navigation');
+      }
+    };
+  }, [chatSessionId]);
+
+  // Scroll chat to bottom
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatMessages]);
+
+  // Focus input after chat opens or after response
+  useEffect(() => {
+    if (chatOpen && !chatMinimized && chatInputRef.current && !chatLoading) {
+      chatInputRef.current.focus();
+    }
+  }, [chatOpen, chatMinimized, chatLoading, chatMessages]);
+
+  // Handle chat open - always start fresh
+  const handleOpenChat = async () => {
+    // Always start with a fresh session when opening chat
+    if (chatSessionId) {
+      await endChatSession('new_conversation');
+    }
+    await startNewSession();
+    setChatOpen(true);
+    setChatMinimized(false);
+    resetInactivityTimer();
+  };
+
+  // Handle chat close
+  const handleCloseChat = async () => {
+    await endChatSession('user_closed');
+    setChatOpen(false);
+    setChatMinimized(false);
+  };
+
+  // Send chat message - handles multi-turn conversations
+  const sendChatMessage = async (messageText = null) => {
+    const textToSend = messageText || chatInput;
+    if (!textToSend.trim() || chatLoading) return;
+    
+    // Reset inactivity timer on user action
+    resetInactivityTimer();
+    
+    const userMessage = {
+      role: 'user',
+      content: textToSend.trim(),
+      timestamp: new Date().toISOString()
+    };
+    
+    setChatMessages(prev => [...prev, userMessage]);
+    setChatInput('');
+    setChatLoading(true);
+    
+    try {
+      // Ensure we have a session
+      let currentSessionId = chatSessionId;
+      if (!currentSessionId) {
+        currentSessionId = await startNewSession();
+      }
+      
+      const response = await fetch(`${API_BASE}/api/agents/support/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage.content,
+          session_id: currentSessionId
+        })
+      });
+      
+      const data = await response.json();
+      
+      // Update session ID if backend assigned a new one
+      if (data.session_id !== currentSessionId) {
+        setChatSessionId(data.session_id);
+      }
+      
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: data.message,
+        timestamp: new Date().toISOString(),
+        resolved: !data.escalation_required,
+        category: data.category
+      }]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date().toISOString(),
+        error: true
+      }]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,74 +418,74 @@ const CompanyLanding = () => {
   };
 
   const stats = [
-    { value: '1M+', label: 'Lab Reports Analyzed' },
-    { value: '500K+', label: 'Active Users' },
-    { value: '5000+', label: 'Verified Doctors' },
-    { value: '25+', label: 'Countries' }
+    { value: '1M+', label: t('lab_reports_analyzed', 'Lab Reports Analyzed') },
+    { value: '500K+', label: t('active_users', 'Active Users') },
+    { value: '5000+', label: t('verified_doctors', 'Verified Doctors') },
+    { value: '25+', label: t('countries', 'Countries') }
   ];
 
   const features = [
     { 
       icon: FileText, 
-      title: 'Lab Report Analysis', 
-      description: 'AI pulls and analyzes 100+ parameters from any diagnostic lab report automatically',
+      title: t('lab_report_analysis', 'Lab Report Analysis'), 
+      description: t('lab_report_analysis_desc', 'AI pulls and analyzes 100+ parameters from any diagnostic lab report automatically'),
       color: 'from-[#FF9A3B] to-[#E55A00]'
     },
     { 
       icon: Watch, 
-      title: 'Wearable Integration', 
-      description: 'Sync Apple Health, Samsung Health & Google Fit for complete health tracking',
+      title: t('wearable_integration', 'Wearable Integration'), 
+      description: t('wearable_integration_desc', 'Sync Apple Health, Samsung Health & Google Fit for complete health tracking'),
       color: 'from-[#FFDA7B] to-[#FF9A3B]'
     },
     { 
       icon: Leaf, 
-      title: 'Ayurvedic Wellness', 
-      description: 'Personalized yoga, diet plans, and daily routines based on ancient wisdom',
+      title: t('ayurvedic_wellness', 'Ayurvedic Wellness'), 
+      description: t('ayurvedic_wellness_desc', 'Personalized yoga, diet plans, and daily routines based on ancient wisdom'),
       color: 'from-[#10B981] to-[#059669]'
     },
     { 
       icon: Stethoscope, 
-      title: 'Doctor Consultations', 
-      description: 'Connect with verified Allopathic & Ayurvedic doctors, rate and review them',
+      title: t('doctor_consultations', 'Doctor Consultations'), 
+      description: t('doctor_consultations_desc', 'Connect with verified Allopathic & Ayurvedic doctors, rate and review them'),
       color: 'from-[#3B82F6] to-[#1D4ED8]'
     }
   ];
 
   const doctorTypes = [
     {
-      type: 'Allopathic Doctors',
+      type: t('allopathic_doctors', 'Allopathic Doctors'),
       icon: Stethoscope,
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-50',
       borderColor: 'border-blue-200',
       qualifications: ['MBBS', 'MD', 'MS', 'DM', 'MCh'],
       specialties: ['General Medicine', 'Cardiology', 'Neurology', 'Orthopedics', 'Dermatology'],
-      features: ['Evidence-based treatment', 'Modern diagnostics', 'Prescription medicines', 'Surgical consultations']
+      features: [t('evidence_based', 'Evidence-based treatment'), t('modern_diagnostics', 'Modern diagnostics'), t('prescription_medicines', 'Prescription medicines'), t('surgical_consultations', 'Surgical consultations')]
     },
     {
-      type: 'Ayurvedic Doctors',
+      type: t('ayurvedic_doctors', 'Ayurvedic Doctors'),
       icon: Leaf,
       color: 'from-green-500 to-green-600',
       bgColor: 'bg-green-50',
       borderColor: 'border-green-200',
       qualifications: ['BAMS', 'MD Ayurveda', 'PhD Ayurveda'],
       specialties: ['Panchakarma', 'Rasayana', 'Kayachikitsa', 'Shalya Tantra', 'Yoga Therapy'],
-      features: ['Holistic healing', 'Natural remedies', 'Lifestyle guidance', 'Preventive care']
+      features: [t('holistic_healing', 'Holistic healing'), t('natural_remedies', 'Natural remedies'), t('lifestyle_guidance', 'Lifestyle guidance'), t('preventive_care', 'Preventive care')]
     }
   ];
 
   const wearableData = [
-    { icon: Moon, label: 'Sleep Analysis', desc: 'REM, Deep, Light Sleep stages' },
-    { icon: Heart, label: 'Heart Health', desc: 'HR, HRV, SpO2 monitoring' },
-    { icon: Dumbbell, label: 'Activity Tracking', desc: 'Steps, Calories, Workouts' },
-    { icon: Brain, label: 'Stress Levels', desc: 'Mental wellness tracking' }
+    { icon: Moon, label: t('sleep_analysis', 'Sleep Analysis'), desc: t('sleep_analysis_desc', 'REM, Deep, Light Sleep stages') },
+    { icon: Heart, label: t('heart_health', 'Heart Health'), desc: t('heart_health_desc', 'HR, HRV, SpO2 monitoring') },
+    { icon: Dumbbell, label: t('activity_tracking', 'Activity Tracking'), desc: t('activity_tracking_desc', 'Steps, Calories, Workouts') },
+    { icon: Brain, label: t('stress_levels', 'Stress Levels'), desc: t('stress_levels_desc', 'Mental wellness tracking') }
   ];
 
   const otpAccessFeatures = [
-    { icon: Key, title: 'OTP-Based Access', desc: 'Doctors request access via secure OTP' },
-    { icon: Clock, title: 'Time-Limited', desc: 'One-time access expires after session' },
-    { icon: Shield, title: 'User Controlled', desc: 'You approve every access request' },
-    { icon: UserCheck, title: 'Audit Trail', desc: 'Complete log of who accessed what' }
+    { icon: Key, title: t('otp_based_access', 'OTP-Based Access'), desc: t('otp_based_access_desc', 'Doctors request access via secure OTP') },
+    { icon: Clock, title: t('time_limited', 'Time-Limited'), desc: t('time_limited_desc', 'One-time access expires after session') },
+    { icon: Shield, title: t('user_controlled', 'User Controlled'), desc: t('user_controlled_desc', 'You approve every access request') },
+    { icon: UserCheck, title: t('audit_trail', 'Audit Trail'), desc: t('audit_trail_desc', 'Complete log of who accessed what') }
   ];
 
   const complianceBadges = [
@@ -236,22 +555,22 @@ const CompanyLanding = () => {
 
             <div className="hidden lg:flex items-center space-x-8">
               <a href="#features" className={`font-medium hover:text-[#E55A00] transition ${scrolled ? 'text-gray-700' : 'text-white'}`}>
-                Features
+                {t('features', 'Features')}
               </a>
               <a href="#doctors" className={`font-medium hover:text-[#E55A00] transition ${scrolled ? 'text-gray-700' : 'text-white'}`}>
-                Doctors
+                {t('doctors', 'Doctors')}
               </a>
               <a href="#wearables" className={`font-medium hover:text-[#E55A00] transition ${scrolled ? 'text-gray-700' : 'text-white'}`}>
-                Wearables
+                {t('wearables', 'Wearables')}
               </a>
               <a href="#security" className={`font-medium hover:text-[#E55A00] transition ${scrolled ? 'text-gray-700' : 'text-white'}`}>
-                Security
+                {t('security', 'Security')}
               </a>
-              <a href="#compliance" className={`font-medium hover:text-[#E55A00] transition ${scrolled ? 'text-gray-700' : 'text-white'}`}>
+              <Link to="/compliance" className={`font-medium hover:text-[#E55A00] transition ${scrolled ? 'text-gray-700' : 'text-white'}`}>
                 Compliance
-              </a>
+              </Link>
               <a href="#about" className={`font-medium hover:text-[#E55A00] transition ${scrolled ? 'text-gray-700' : 'text-white'}`}>
-                About
+                {t('about', 'About')}
               </a>
               <LanguageSwitcher darkMode={!scrolled} />
               <Link 
@@ -275,11 +594,12 @@ const CompanyLanding = () => {
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-t shadow-xl">
             <div className="px-4 py-6 space-y-4">
-              <a href="#features" className="block text-gray-700 font-medium py-2">Features</a>
-              <a href="#doctors" className="block text-gray-700 font-medium py-2">Doctors</a>
-              <a href="#wearables" className="block text-gray-700 font-medium py-2">Wearables</a>
-              <a href="#security" className="block text-gray-700 font-medium py-2">Security</a>
-              <a href="#about" className="block text-gray-700 font-medium py-2">About</a>
+              <a href="#features" className="block text-gray-700 font-medium py-2">{t('features', 'Features')}</a>
+              <a href="#doctors" className="block text-gray-700 font-medium py-2">{t('doctors', 'Doctors')}</a>
+              <a href="#wearables" className="block text-gray-700 font-medium py-2">{t('wearables', 'Wearables')}</a>
+              <a href="#security" className="block text-gray-700 font-medium py-2">{t('security', 'Security')}</a>
+              <Link to="/compliance" className="block text-gray-700 font-medium py-2">Compliance</Link>
+              <a href="#about" className="block text-gray-700 font-medium py-2">{t('about', 'About')}</a>
               <div className="py-2"><LanguageSwitcher /></div>
               <Link to="/login/health" className="block px-6 py-3 bg-gradient-to-r from-[#FF9A3B] to-[#E55A00] text-white rounded-lg text-center font-semibold">
                 Sign In
@@ -312,7 +632,7 @@ const CompanyLanding = () => {
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm border border-[#FFDA7B]/30 text-white/90 mb-8">
               <Heart className="w-4 h-4 text-red-400 animate-pulse" />
-              Your Complete Health Companion • AI-Powered Wellness
+              {t('health_companion', 'Your Complete Health Companion')} • {t('ai_powered_wellness', 'AI-Powered Wellness')}
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight mb-6">
@@ -320,18 +640,18 @@ const CompanyLanding = () => {
                 HealthTrack Pro
               </span>
               <span className="block mt-2 text-3xl md:text-4xl lg:text-5xl">
-                Lab Analysis • Doctors • Wellness
+                {t('lab_analysis', 'Lab Analysis')} • {t('doctors', 'Doctors')} • {t('wellness', 'Wellness')}
               </span>
             </h1>
 
             <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-6 leading-relaxed">
-              AI-powered lab report analysis, wearable health data integration, and consultations with verified 
-              <span className="text-blue-300 font-semibold"> Allopathic</span> & 
-              <span className="text-green-300 font-semibold"> Ayurvedic</span> doctors - all in one platform.
+              {t('hero_description_health', 'AI-powered lab report analysis, wearable health data integration, and consultations with verified')} 
+              <span className="text-blue-300 font-semibold"> {t('allopathic', 'Allopathic')}</span> & 
+              <span className="text-green-300 font-semibold"> {t('ayurvedic', 'Ayurvedic')}</span> {t('doctors_platform', 'doctors - all in one platform.')}
             </p>
 
             <p className="text-sm text-[#FFDA7B]/80 max-w-2xl mx-auto mb-10 italic">
-              Rate doctors, track your health journey, and get personalized lifestyle recommendations.
+              {t('rate_doctors_track', 'Rate doctors, track your health journey, and get personalized lifestyle recommendations.')}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -339,7 +659,7 @@ const CompanyLanding = () => {
                 to="/login/health"
                 className="px-8 py-4 bg-gradient-to-r from-[#FF9A3B] to-[#E55A00] text-white rounded-lg font-semibold hover:shadow-2xl hover:shadow-[#E55A00]/40 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
               >
-                Get Started Free
+                {t('get_started_free', 'Get Started Free')}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <a 
@@ -347,7 +667,7 @@ const CompanyLanding = () => {
                 className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-lg font-semibold hover:bg-white/20 border border-[#FFDA7B]/30 transition flex items-center justify-center gap-2"
               >
                 <Stethoscope className="w-5 h-5" />
-                Find a Doctor
+                {t('find_doctor', 'Find a Doctor')}
               </a>
             </div>
 
@@ -371,13 +691,13 @@ const CompanyLanding = () => {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#FFDA7B]/20 rounded-full text-[#E55A00] text-sm font-medium mb-4">
               <Zap className="w-4 h-4" />
-              Core Features
+              {t('core_features', 'Core Features')}
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              Everything You Need for <span className="text-[#E55A00]">Better Health</span>
+              {t('everything_you_need', 'Everything You Need for')} <span className="text-[#E55A00]">{t('better_health', 'Better Health')}</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              From AI-powered diagnostics to doctor consultations, we've got your health journey covered.
+              {t('features_subtitle', "From AI-powered diagnostics to doctor consultations, we've got your health journey covered.")}
             </p>
           </div>
 
@@ -401,13 +721,13 @@ const CompanyLanding = () => {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white rounded-full text-[#E55A00] text-sm font-medium mb-4 shadow-sm">
               <Stethoscope className="w-4 h-4" />
-              Doctor Network
+              {t('doctor_network', 'Doctor Network')}
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              Two Streams of <span className="text-[#E55A00]">Medical Excellence</span>
+              {t('two_streams_of', 'Two Streams of')} <span className="text-[#E55A00]">{t('medical_excellence', 'Medical Excellence')}</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Choose from verified Allopathic specialists or experienced Ayurvedic practitioners. Rate and review doctors to help others.
+              {t('doctors_section_desc', 'Choose from verified Allopathic specialists or experienced Ayurvedic practitioners. Rate and review doctors to help others.')}
             </p>
           </div>
 
@@ -424,13 +744,13 @@ const CompanyLanding = () => {
                       {[1,2,3,4,5].map(i => (
                         <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                       ))}
-                      <span className="text-sm text-gray-600 ml-2">Verified & Rated</span>
+                      <span className="text-sm text-gray-600 ml-2">{t('verified_rated', 'Verified & Rated')}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Qualifications</h4>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('qualifications', 'Qualifications')}</h4>
                   <div className="flex flex-wrap gap-2">
                     {doctor.qualifications.map((qual, i) => (
                       <span key={i} className="px-3 py-1 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm">
@@ -441,7 +761,7 @@ const CompanyLanding = () => {
                 </div>
 
                 <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Popular Specialties</h4>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('popular_specialties', 'Popular Specialties')}</h4>
                   <div className="flex flex-wrap gap-2">
                     {doctor.specialties.map((spec, i) => (
                       <span key={i} className="px-3 py-1 bg-white/80 rounded-full text-sm text-gray-600">
@@ -464,7 +784,7 @@ const CompanyLanding = () => {
                   to="/login/health"
                   className={`mt-6 w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r ${doctor.color} text-white rounded-xl font-semibold hover:shadow-lg transition`}
                 >
-                  Find {doctor.type.split(' ')[0]} Doctors
+                  {t('find_doctors_type', 'Find')} {doctor.type.split(' ')[0]} {t('doctors', 'Doctors')}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -480,15 +800,14 @@ const CompanyLanding = () => {
                 </div>
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Rate & Review Your Doctors</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{t('rate_review_doctors', 'Rate & Review Your Doctors')}</h3>
                 <p className="text-gray-600">
-                  After each consultation, rate your experience and leave a review. Help other patients find the best doctors 
-                  while doctors build their reputation on our platform. All reviews are verified from actual consultations.
+                  {t('rate_review_desc', 'After each consultation, rate your experience and leave a review. Help other patients find the best doctors while doctors build their reputation on our platform. All reviews are verified from actual consultations.')}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <BadgeCheck className="w-6 h-6 text-blue-500" />
-                <span className="text-sm font-medium text-gray-700">Verified Reviews Only</span>
+                <span className="text-sm font-medium text-gray-700">{t('verified_reviews_only', 'Verified Reviews Only')}</span>
               </div>
             </div>
           </div>
@@ -502,14 +821,13 @@ const CompanyLanding = () => {
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#FFDA7B]/20 rounded-full text-[#FFDA7B] text-sm font-medium mb-6">
                 <Shield className="w-4 h-4" />
-                Secure Doctor Access
+                {t('secure_doctor_access', 'Secure Doctor Access')}
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                OTP-Protected <span className="text-[#FFDA7B]">Health Records Access</span>
+                {t('otp_protected', 'OTP-Protected')} <span className="text-[#FFDA7B]">{t('health_records_access', 'Health Records Access')}</span>
               </h2>
               <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-                Your health data is yours. When a doctor needs to view your records, they must request access. 
-                You receive an OTP on your registered mobile - share it only when you're ready. Access is one-time and expires after the session.
+                {t('otp_security_desc', 'Your health data is yours. When a doctor needs to view your records, they must request access. You receive an OTP on your registered mobile - share it only when you\'re ready. Access is one-time and expires after the session.')}
               </p>
 
               <div className="grid grid-cols-2 gap-4">
@@ -526,39 +844,39 @@ const CompanyLanding = () => {
             <div className="relative">
               <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-3xl p-8 border border-[#FF9A3B]/20 backdrop-blur-sm">
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-white mb-2">How It Works</h3>
+                  <h3 className="text-xl font-bold text-white mb-2">{t('how_it_works', 'How It Works')}</h3>
                 </div>
                 
                 <div className="space-y-4">
                   <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4">
                     <div className="w-10 h-10 bg-[#FF9A3B] rounded-full flex items-center justify-center font-bold text-white flex-shrink-0">1</div>
                     <div>
-                      <h4 className="font-semibold text-white">Doctor Requests Access</h4>
-                      <p className="text-sm text-gray-400">Doctor initiates access request for your health records</p>
+                      <h4 className="font-semibold text-white">{t('doctor_requests_access', 'Doctor Requests Access')}</h4>
+                      <p className="text-sm text-gray-400">{t('doctor_requests_access_desc', 'Doctor initiates access request for your health records')}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4">
                     <div className="w-10 h-10 bg-[#FF9A3B] rounded-full flex items-center justify-center font-bold text-white flex-shrink-0">2</div>
                     <div>
-                      <h4 className="font-semibold text-white">You Receive OTP</h4>
-                      <p className="text-sm text-gray-400">6-digit OTP sent to your registered mobile number</p>
+                      <h4 className="font-semibold text-white">{t('you_receive_otp', 'You Receive OTP')}</h4>
+                      <p className="text-sm text-gray-400">{t('you_receive_otp_desc', '6-digit OTP sent to your registered mobile number')}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4">
                     <div className="w-10 h-10 bg-[#FF9A3B] rounded-full flex items-center justify-center font-bold text-white flex-shrink-0">3</div>
                     <div>
-                      <h4 className="font-semibold text-white">Share When Ready</h4>
-                      <p className="text-sm text-gray-400">Share OTP with doctor only when you approve access</p>
+                      <h4 className="font-semibold text-white">{t('share_when_ready', 'Share When Ready')}</h4>
+                      <p className="text-sm text-gray-400">{t('share_when_ready_desc', 'Share OTP with doctor only when you approve access')}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4">
                     <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center font-bold text-white flex-shrink-0">✓</div>
                     <div>
-                      <h4 className="font-semibold text-white">One-Time Access</h4>
-                      <p className="text-sm text-gray-400">Access expires after session ends - fully audited</p>
+                      <h4 className="font-semibold text-white">{t('one_time_access', 'One-Time Access')}</h4>
+                      <p className="text-sm text-gray-400">{t('one_time_access_desc', 'Access expires after session ends - fully audited')}</p>
                     </div>
                   </div>
                 </div>
@@ -574,13 +892,13 @@ const CompanyLanding = () => {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#FFDA7B]/20 rounded-full text-[#E55A00] text-sm font-medium mb-4">
               <Watch className="w-4 h-4" />
-              Wearable Integration
+              {t('wearable_integration', 'Wearable Integration')}
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              Sync Your <span className="text-[#E55A00]">Health Data</span>
+              {t('sync_your', 'Sync Your')} <span className="text-[#E55A00]">{t('health_data', 'Health Data')}</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Connect your favorite health apps and wearables. We analyze everything to give you complete health insights.
+              {t('wearables_desc', 'Connect your favorite health apps and wearables. We analyze everything to give you complete health insights.')}
             </p>
           </div>
 
@@ -597,8 +915,8 @@ const CompanyLanding = () => {
           <div className="bg-gradient-to-r from-[#FFDA7B]/20 to-[#FF9A3B]/20 rounded-2xl p-8 border border-[#FF9A3B]/20">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Supported Platforms</h3>
-                <p className="text-gray-600">Connect with all major health platforms</p>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{t('supported_platforms', 'Supported Platforms')}</h3>
+                <p className="text-gray-600">{t('connect_all_platforms', 'Connect with all major health platforms')}</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="px-4 py-2 bg-white rounded-lg shadow-sm flex items-center gap-2">
@@ -628,12 +946,10 @@ const CompanyLanding = () => {
                 <div className="w-14 h-14 bg-gradient-to-br from-[#FF9A3B] to-[#E55A00] rounded-xl flex items-center justify-center">
                   <Target className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">Our Vision</h3>
+                <h3 className="text-2xl font-bold text-gray-900">{t('our_vision', 'Our Vision')}</h3>
               </div>
               <p className="text-lg text-gray-600 leading-relaxed">
-                To create a unified health platform where modern medicine meets traditional wisdom. 
-                We believe in giving users the choice between Allopathic and Ayurvedic care, 
-                empowered by AI-driven insights and complete control over their health data.
+                {t('vision_desc', 'To create a unified health platform where modern medicine meets traditional wisdom. We believe in giving users the choice between Allopathic and Ayurvedic care, empowered by AI-driven insights and complete control over their health data.')}
               </p>
             </div>
 
@@ -642,7 +958,7 @@ const CompanyLanding = () => {
                 <div className="w-14 h-14 bg-gradient-to-br from-[#E55A00] to-[#C64700] rounded-xl flex items-center justify-center">
                   <Lightbulb className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
+                <h3 className="text-2xl font-bold text-gray-900">{t('our_mission', 'Our Mission')}</h3>
               </div>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
@@ -650,8 +966,8 @@ const CompanyLanding = () => {
                     <Target className="w-4 h-4 text-[#E55A00]" />
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-900">Reach the Last Mile</span>
-                    <p className="text-sm text-gray-600">Fill the critical healthcare gap by delivering affordable and accessible quality care to the "last mile" of humanity in every region we operate.</p>
+                    <span className="font-semibold text-gray-900">{t('reach_last_mile', 'Reach the Last Mile')}</span>
+                    <p className="text-sm text-gray-600">{t('reach_last_mile_desc', 'Fill the critical healthcare gap by delivering affordable and accessible quality care to the "last mile" of humanity in every region we operate.')}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -659,8 +975,8 @@ const CompanyLanding = () => {
                     <Heart className="w-4 h-4 text-green-600" />
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-900">Bridge Traditions</span>
-                    <p className="text-sm text-gray-600">Connect Allopathic and Ayurvedic healthcare under one platform.</p>
+                    <span className="font-semibold text-gray-900">{t('bridge_traditions', 'Bridge Traditions')}</span>
+                    <p className="text-sm text-gray-600">{t('bridge_traditions_desc', 'Connect Allopathic and Ayurvedic healthcare under one platform.')}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -668,8 +984,8 @@ const CompanyLanding = () => {
                     <Brain className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-900">AI Empowerment</span>
-                    <p className="text-sm text-gray-600">Offer AI-powered health insights from labs & wearables.</p>
+                    <span className="font-semibold text-gray-900">{t('ai_empowerment', 'AI Empowerment')}</span>
+                    <p className="text-sm text-gray-600">{t('ai_empowerment_desc', 'Offer AI-powered health insights from labs & wearables.')}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -677,8 +993,8 @@ const CompanyLanding = () => {
                     <Lock className="w-4 h-4 text-purple-600" />
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-900">Total Privacy</span>
-                    <p className="text-sm text-gray-600">Ensure user-controlled OTP-based access.</p>
+                    <span className="font-semibold text-gray-900">{t('total_privacy', 'Total Privacy')}</span>
+                    <p className="text-sm text-gray-600">{t('total_privacy_desc', 'Ensure user-controlled OTP-based access.')}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -686,12 +1002,44 @@ const CompanyLanding = () => {
                     <UserCheck className="w-4 h-4 text-teal-600" />
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-900">Trusted Network</span>
-                    <p className="text-sm text-gray-600">Feature verified doctor profiles and genuine reviews.</p>
+                    <span className="font-semibold text-gray-900">{t('trusted_network', 'Trusted Network')}</span>
+                    <p className="text-sm text-gray-600">{t('trusted_network_desc', 'Feature verified doctor profiles and genuine reviews.')}</p>
                   </div>
                 </li>
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Leadership Team Section */}
+      <section id="leadership" className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-[#FFDA7B]/20 to-[#FF9A3B]/20 rounded-full text-[#E55A00] text-sm font-medium mb-4">
+              <Users className="w-4 h-4" />
+              {t('our_leaders', 'Our Leaders')}
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              {t('know_our', 'Know Our')} <span className="bg-gradient-to-r from-[#FFDA7B] via-[#FF9A3B] to-[#E55A00] bg-clip-text text-transparent">{t('leadership_team', 'Leadership Team')}</span>
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              {t('leadership_desc', 'Guided by experience, driven by innovation. Meet the visionaries leading Infuse-ai towards a healthier future.')}
+            </p>
+          </div>
+
+          {/* First Row - 3 Leaders */}
+          <div className="grid md:grid-cols-3 gap-6 mb-6">
+            {leadershipTeam.slice(0, 3).map((leader, idx) => (
+              <LeaderCard key={idx} leader={leader} index={idx} />
+            ))}
+          </div>
+
+          {/* Second Row - 2 Directors Centered */}
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {leadershipTeam.slice(3, 5).map((leader, idx) => (
+              <LeaderCard key={idx + 3} leader={leader} index={idx + 3} />
+            ))}
           </div>
         </div>
       </section>
@@ -848,8 +1196,16 @@ const CompanyLanding = () => {
             <div>
               <h4 className="font-semibold text-white mb-4">Contact</h4>
               <ul className="space-y-3 text-gray-400">
-                <li>info@infuse.net.in</li>
-                <li>+91-9599960663</li>
+                <li>
+                  <a href="mailto:info@infuse.net.in" className="hover:text-[#FF9A3B] transition">
+                    info@infuse.net.in
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+919599960663" className="hover:text-[#FF9A3B] transition">
+                    +91-9599960663
+                  </a>
+                </li>
                 <li>India</li>
               </ul>
             </div>
@@ -872,11 +1228,11 @@ const CompanyLanding = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-md overflow-hidden">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 p-6 border-b border-slate-700">
+            <div className="bg-gradient-to-r from-[#FFDA7B]/20 via-[#FF9A3B]/20 to-[#E55A00]/20 p-6 border-b border-slate-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-600/30 rounded-lg">
-                    <Lock className="w-6 h-6 text-purple-400" />
+                  <div className="p-2 bg-gradient-to-br from-[#FFDA7B]/30 to-[#E55A00]/30 rounded-lg">
+                    <Lock className="w-6 h-6 text-[#FF9A3B]" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white">Admin Authentication</h3>
@@ -915,7 +1271,7 @@ const CompanyLanding = () => {
                   value={adminLoginForm.email}
                   onChange={(e) => setAdminLoginForm({ ...adminLoginForm, email: e.target.value })}
                   placeholder="admin@infuse.net.in"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9A3B] focus:border-transparent"
                   required
                   data-testid="admin-landing-email"
                 />
@@ -930,7 +1286,7 @@ const CompanyLanding = () => {
                     value={adminLoginForm.password}
                     onChange={(e) => setAdminLoginForm({ ...adminLoginForm, password: e.target.value })}
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent pr-12"
+                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9A3B] focus:border-transparent pr-12"
                     required
                     data-testid="admin-landing-password"
                   />
@@ -956,7 +1312,7 @@ const CompanyLanding = () => {
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3 bg-gradient-to-r from-[#FFDA7B] via-[#FF9A3B] to-[#E55A00] hover:from-[#FFE49A] hover:via-[#FFAD5C] hover:to-[#FF7A2E] text-white font-semibold rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg hover:shadow-[#E55A00]/30"
                 data-testid="admin-landing-login-btn"
               >
                 {loginLoading ? (
@@ -994,6 +1350,14 @@ const CompanyLanding = () => {
               </button>
             </div>
             <div className="space-y-2">
+              <Link 
+                to="/ai-agents" 
+                className="flex items-center gap-3 px-3 py-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-[#FF9A3B] rounded-lg hover:from-yellow-500/30 hover:to-orange-500/30 transition text-sm border border-[#FF9A3B]/30"
+                data-testid="admin-ai-agents-link"
+              >
+                <Bot className="w-4 h-4" />
+                AI Agents Dashboard
+              </Link>
               <Link 
                 to="/admin/feature-flags" 
                 className="flex items-center gap-3 px-3 py-2 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition text-sm"
@@ -1038,6 +1402,187 @@ const CompanyLanding = () => {
           </button>
         )}
       </div>
+
+      {/* Floating Support Chatbot */}
+      {!chatOpen ? (
+        /* Floating Chat Button */
+        <button
+          onClick={handleOpenChat}
+          className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-[#FFDA7B] to-[#E55A00] rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 group"
+          data-testid="chat-bot-button"
+        >
+          <MessageCircle className="w-6 h-6 text-white" />
+          <span className="absolute -top-2 -right-2 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+            <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+          </span>
+          {/* Tooltip */}
+          <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-slate-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            Need help? Chat with us!
+          </div>
+        </button>
+      ) : (
+        /* Chat Widget */
+        <div 
+          className={`fixed z-50 bg-slate-900 rounded-2xl shadow-2xl border border-[#FF9A3B]/30 overflow-hidden transition-all duration-300 ${
+            chatMinimized 
+              ? 'bottom-6 right-6 w-72 h-14' 
+              : 'bottom-6 right-6 w-96 h-[500px] max-h-[80vh]'
+          }`}
+          data-testid="chat-widget"
+        >
+          {/* Chat Header */}
+          <div className="bg-gradient-to-r from-[#FFDA7B] via-[#FF9A3B] to-[#E55A00] px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-lg">
+                <Bot className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white text-sm">Support Assistant</h3>
+                {!chatMinimized && (
+                  <p className="text-white/80 text-xs">AI-powered help</p>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <button 
+                onClick={() => setChatMinimized(!chatMinimized)}
+                className="p-2 hover:bg-white/20 rounded-lg transition"
+              >
+                {chatMinimized ? (
+                  <Maximize2 className="w-4 h-4 text-white" />
+                ) : (
+                  <Minimize2 className="w-4 h-4 text-white" />
+                )}
+              </button>
+              <button 
+                onClick={handleCloseChat}
+                className="p-2 hover:bg-white/20 rounded-lg transition"
+                data-testid="chat-close-button"
+              >
+                <X className="w-4 h-4 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Chat Body - Hidden when minimized */}
+          {!chatMinimized && (
+            <>
+              {/* Messages Area */}
+              <div className="h-[calc(100%-130px)] overflow-y-auto p-4 space-y-4 bg-slate-800/50">
+                {chatMessages.length === 0 ? (
+                  <div className="text-center py-8">
+                    <div className="p-4 bg-gradient-to-br from-[#FFDA7B]/20 to-[#FF9A3B]/20 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                      <Bot className="w-8 h-8 text-[#FFDA7B]" />
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">Hi! How can I help?</h4>
+                    <p className="text-slate-400 text-sm mb-4">Ask me anything about HealthTrack Pro</p>
+                    
+                    {/* Quick Questions */}
+                    <div className="space-y-2">
+                      {[
+                        'How do I book an appointment?',
+                        'Where can I view my lab reports?',
+                        'How do I connect my fitness tracker?'
+                      ].map((q, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => sendChatMessage(q)}
+                          className="block w-full text-left px-3 py-2 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-sm text-slate-300 transition border border-[#FF9A3B]/20"
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {chatMessages.map((msg, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : msg.role === 'system' ? 'justify-center' : 'justify-start'}`}
+                      >
+                        {/* System message (timeout, etc.) */}
+                        {msg.role === 'system' && (
+                          <div 
+                            className="bg-yellow-500/20 text-yellow-300 text-xs px-4 py-2 rounded-lg border border-yellow-500/30 cursor-pointer hover:bg-yellow-500/30 transition"
+                            onClick={handleOpenChat}
+                          >
+                            <Clock className="w-3 h-3 inline mr-1" />
+                            {msg.content}
+                          </div>
+                        )}
+                        {/* Assistant message */}
+                        {msg.role === 'assistant' && (
+                          <div className="p-1.5 bg-gradient-to-br from-[#FFDA7B]/20 to-[#FF9A3B]/20 rounded-lg h-fit flex-shrink-0">
+                            <Bot className="w-4 h-4 text-[#FFDA7B]" />
+                          </div>
+                        )}
+                        {msg.role !== 'system' && (
+                          <div
+                            className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                              msg.role === 'user'
+                                ? 'bg-gradient-to-r from-[#FFDA7B] to-[#E55A00] text-white'
+                                : 'bg-slate-700/80 text-slate-200 border border-[#FF9A3B]/20'
+                            }`}
+                          >
+                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                            {msg.role === 'assistant' && msg.resolved !== undefined && (
+                              <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-600/50">
+                                <CheckCircle className={`w-3 h-3 ${msg.resolved ? 'text-green-400' : 'text-yellow-400'}`} />
+                                <span className="text-xs text-slate-400">
+                                  {msg.resolved ? 'Resolved' : 'May need follow-up'}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {chatLoading && (
+                      <div className="flex gap-2">
+                        <div className="p-1.5 bg-gradient-to-br from-[#FFDA7B]/20 to-[#FF9A3B]/20 rounded-lg h-fit">
+                          <Bot className="w-4 h-4 text-[#FFDA7B]" />
+                        </div>
+                        <div className="bg-slate-700/80 rounded-2xl px-4 py-3 border border-[#FF9A3B]/20">
+                          <div className="flex gap-1">
+                            <span className="w-2 h-2 bg-[#FF9A3B] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                            <span className="w-2 h-2 bg-[#FF9A3B] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                            <span className="w-2 h-2 bg-[#FF9A3B] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </>
+                )}
+              </div>
+
+              {/* Input Area */}
+              <div className="absolute bottom-0 left-0 right-0 p-3 bg-slate-900 border-t border-[#FF9A3B]/20">
+                <div className="flex gap-2">
+                  <input
+                    ref={chatInputRef}
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
+                    placeholder="Type your message..."
+                    className="flex-1 px-4 py-2.5 bg-slate-800 border border-[#FF9A3B]/30 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF9A3B] focus:border-transparent"
+                    disabled={chatLoading}
+                  />
+                  <button
+                    onClick={() => sendChatMessage()}
+                    disabled={chatLoading || !chatInput.trim()}
+                    className="px-4 py-2.5 bg-gradient-to-r from-[#FFDA7B] to-[#E55A00] hover:from-[#FFE49B] hover:to-[#FF6A10] disabled:opacity-50 rounded-xl transition flex items-center justify-center"
+                  >
+                    <Send className="w-4 h-4 text-white" />
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -12,6 +12,15 @@ export const xhrFetch = (url, options = {}) => {
     const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
     xhr.open(options.method || 'GET', fullUrl);
     
+    // Check if this is a binary/blob request (for downloads)
+    const isDownload = options.responseType === 'blob' || 
+                       fullUrl.includes('/direct-download/') || 
+                       fullUrl.includes('/download/');
+    
+    if (isDownload) {
+      xhr.responseType = 'blob';
+    }
+    
     // Set headers
     const token = localStorage.getItem('token');
     const headers = {
@@ -28,20 +37,30 @@ export const xhrFetch = (url, options = {}) => {
     
     xhr.onload = () => {
       let data;
-      try {
-        data = xhr.responseText ? JSON.parse(xhr.responseText) : {};
-      } catch (e) {
-        data = xhr.responseText || {};
+      let blobData = null;
+      
+      if (isDownload) {
+        // For downloads, keep the blob response
+        blobData = xhr.response;
+        data = null;
+      } else {
+        try {
+          data = xhr.responseText ? JSON.parse(xhr.responseText) : {};
+        } catch (e) {
+          data = xhr.responseText || {};
+        }
       }
       
-      // Create a response-like object
+      // Create a response-like object with blob support
       const response = {
         ok: xhr.status >= 200 && xhr.status < 300,
         status: xhr.status,
         statusText: xhr.statusText,
         data: data,
+        _blob: blobData,
         json: () => Promise.resolve(data),
-        text: () => Promise.resolve(xhr.responseText)
+        text: () => Promise.resolve(isDownload ? '' : xhr.responseText),
+        blob: () => Promise.resolve(blobData)
       };
       
       resolve(response);
@@ -128,19 +147,23 @@ export const xhrUpload = (url, formData, onProgress = null) => {
 if (typeof window !== 'undefined') {
   const originalFetch = window.fetch;
   
+  // Store original fetch for direct access when needed
+  window._originalFetch = originalFetch;
+  
   window.fetch = async (url, options = {}) => {
     // Only intercept API calls to our backend
     const urlStr = typeof url === 'string' ? url : url.toString();
     if (urlStr.includes('/api/') || urlStr.includes(API_URL)) {
       try {
         const response = await xhrFetch(urlStr, options);
-        // Return a fetch-like response
+        // Return a fetch-like response with full blob support
         return {
           ok: response.ok,
           status: response.status,
           statusText: response.statusText,
           json: () => Promise.resolve(response.data),
-          text: () => Promise.resolve(JSON.stringify(response.data)),
+          text: () => response.text(),
+          blob: () => response.blob(),
           clone: function() { return this; }
         };
       } catch (error) {

@@ -228,7 +228,7 @@ const FeatureFlagsAdmin = () => {
   // Login Screen
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 flex items-center justify-center p-6" data-testid="admin-login">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-[#8B4513] to-[#E55A00] flex items-center justify-center p-6" data-testid="admin-login">
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-8">
@@ -238,15 +238,15 @@ const FeatureFlagsAdmin = () => {
               className="h-16 mx-auto mb-4 rounded-lg"
             />
             <h1 className="text-2xl font-bold text-white">Admin Console</h1>
-            <p className="text-emerald-400 text-sm mt-1 font-medium">Empowering Health Through Intelligence</p>
+            <p className="text-[#FF9A3B] text-sm mt-1 font-medium">Empowering Health Through Intelligence</p>
             <p className="text-slate-400 text-xs mt-1">Feature Flags Management</p>
           </div>
 
           {/* Login Form */}
           <div className="bg-slate-800/80 backdrop-blur border border-slate-700 rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-emerald-600/20 rounded-xl">
-                <Lock className="w-6 h-6 text-emerald-500" />
+              <div className="p-3 bg-gradient-to-br from-[#FFDA7B]/20 to-[#FF9A3B]/20 rounded-xl">
+                <Lock className="w-6 h-6 text-[#FF9A3B]" />
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-white">Secure Login</h2>
@@ -262,7 +262,7 @@ const FeatureFlagsAdmin = () => {
                   value={loginForm.email}
                   onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                   placeholder="admin@infuse.net.in"
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9A3B] focus:border-transparent"
                   required
                   data-testid="admin-email"
                 />
@@ -276,7 +276,7 @@ const FeatureFlagsAdmin = () => {
                     value={loginForm.password}
                     onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent pr-12"
+                    className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9A3B] focus:border-transparent pr-12"
                     required
                     data-testid="admin-password"
                   />
@@ -300,7 +300,7 @@ const FeatureFlagsAdmin = () => {
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3 bg-gradient-to-r from-[#FFDA7B] via-[#FF9A3B] to-[#E55A00] hover:from-[#FFE49A] hover:via-[#FFAD5C] hover:to-[#FF7A2E] text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg hover:shadow-[#E55A00]/30"
                 data-testid="admin-login-btn"
               >
                 {loginLoading ? (
@@ -317,7 +317,7 @@ const FeatureFlagsAdmin = () => {
             {/* Footer */}
             <div className="mt-6 pt-6 border-t border-slate-700 text-center">
               <p className="text-xs text-slate-500">
-                Powered by <span className="text-emerald-400">Infuse AI</span>
+                Powered by <span className="text-[#FF9A3B]">Infuse AI</span>
               </p>
               <p className="text-xs text-slate-600 mt-1">
                 info@infuse.net.in | www.infuse.net.in
@@ -334,7 +334,7 @@ const FeatureFlagsAdmin = () => {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <RefreshCw className="w-12 h-12 text-emerald-500 animate-spin mx-auto mb-4" />
+          <RefreshCw className="w-12 h-12 text-[#FF9A3B] animate-spin mx-auto mb-4" />
           <p className="text-slate-400">Loading feature flags...</p>
         </div>
       </div>

@@ -85,14 +85,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password, platform = null) => {
+  const login = async (email, password, mfaCode = null, platform = null) => {
     try {
+      const requestBody = { email, password };
+      if (mfaCode) {
+        requestBody.mfa_code = mfaCode;
+      }
+      
       const result = await xhrRequest(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify(requestBody)
       });
 
       if (!result.ok) {
@@ -100,13 +105,25 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = result.data;
+      
+      // Check if MFA is required
+      if (data.mfa_required) {
+        return { 
+          success: false, 
+          mfaRequired: true, 
+          userId: data.user_id,
+          message: data.message || 'Please enter your 6-digit MFA code'
+        };
+      }
+      
+      // Login successful
       setToken(data.access_token);
       setUser(data.user);
       localStorage.setItem('token', data.access_token);
       
       // Return success without auto-navigation - let the caller handle it
       // This allows SecurityLogin and HealthLogin to navigate to their respective dashboards
-      return { success: true, user: data.user };
+      return { success: true, user: data.user, mfaEnabled: data.user?.mfa_enabled };
     } catch (error) {
       return { success: false, error: error.message };
     }
