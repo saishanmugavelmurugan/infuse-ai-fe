@@ -52,7 +52,7 @@ const Login = () => {
         <div className="text-center mb-12">
           <Link to="/" className="inline-flex items-center space-x-2">
             <img 
-              src={process.env.REACT_APP_LOGO_URL} 
+              src="/logo192.png"
               alt="Infuse-AI Logo" 
               className="h-12 w-auto object-contain"
             />

@@ -18,7 +18,7 @@ export const InfuseLogo = ({
   
   const LogoIcon = () => (
     <img 
-      src={LOGO_URL}
+      src="/logo192.png"
       alt="Infuse.AI Logo"
       style={{ 
         width: size, 
