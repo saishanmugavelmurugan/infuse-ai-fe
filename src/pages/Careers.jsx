@@ -141,7 +141,7 @@ const Careers = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2">
               <img 
-                src={process.env.REACT_APP_LOGO_URL} 
+                src="/logo192.png" 
                 alt="Infuse-ai Logo" 
                 className="w-10 h-10 object-contain"
               />
