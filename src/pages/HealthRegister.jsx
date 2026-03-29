@@ -499,7 +499,7 @@ const HealthRegister = () => {
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center justify-center">
               <img 
-                src={process.env.REACT_APP_LOGO_URL} 
+                src="/logo192.png" 
                 alt="Infuse-AI Logo" 
                 className="h-14 w-auto object-contain"
               />
