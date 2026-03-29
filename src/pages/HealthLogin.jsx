@@ -69,7 +69,7 @@ const HealthLogin = () => {
           <div>
             <div className="flex items-center justify-center">
               <img 
-                src={process.env.REACT_APP_LOGO_URL} 
+                src="/logo192.png" 
                 alt="Infuse-AI Logo" 
                 className="h-16 w-auto object-contain"
               />
